@@ -234,7 +234,7 @@ function addPhrase(req, res) {
         util.log('Authorizing user in addPhrase method in application middleware');
         // Authorize the current user
         return sec.authorizeUser(req.body.username, req.body.accessToken);
-    }).then((result)=> {
+    }).then((userDoc)=> {
         let phrase = req.body.phrase;
         // Malformed request
         if (!phrase) {
@@ -278,7 +278,7 @@ function annotatePhrase(req, res) {
     sec.authenticateApp(req.get('clientId')).then((result) => {
         // Authorize the user
         return sec.authorizeUser(req.body.username, req.body.accessToken);
-    }).then((result)=> {
+    }).then((userDoc)=> {
         // Request does not contain all fields
         if (!req.body.hash || !req.body.languageAbr || !req.body.isAzureCorrect || !req.body.azureTranslation ||
                 !req.body.googleTranslation || !req.body.isGoogleCorrect || !req.body.yandexTranslation || 
@@ -297,8 +297,6 @@ function annotatePhrase(req, res) {
         // Set the full lanugage title
         language = constants[req.body.languageAbr];
 
-        return User.findOne({'username' : req.body.username});
-    }).then((userDoc)=>{
         // Three user case scenarios:
         // Annotating the phrase for the first time ever => Just add
         // Annotating the same phrase, but with a different language => Just add

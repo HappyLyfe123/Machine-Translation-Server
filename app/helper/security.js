@@ -112,7 +112,7 @@ function authorizeUser(username, accessToken) {
             }
 
             // If the tokens match and the expiration time for 
-            // the token hasn't expired, continue
+            // the token hasn't expired, return the userDoc and continue
             resolve(userDoc);
 
         }).catch((err)=> {

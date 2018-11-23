@@ -96,8 +96,29 @@ function renewToken(req, res) {
 function retrieveUserAnnotations(req, res) {
     sec.authenticateApp(req.get('clientId')).then((result)=>{
         return sec.authorizeUser(req.get('username'), req.get('accessToken'));
-    }).then((result)=> {
-        
+    }).then((userDoc)=> {
+        // If the user specifies a target user in their request, check if they 
+        // are an admin
+        if(req.get('targetUser')) {
+            if(userDoc.isAdmin) {
+                User.findOne({'username' : req.get('targetUser')}).exec(function(userDoc) {
+                    // The user specified by the admin account doesn't exist
+                    if(!userDoc) {
+                        util.log('User specified by admin account for annotation retrieval does not exist');
+                        return res.status(constants.NOT_FOUND).json({message : 'User not found'});
+                    } else {
+                        return res.status(constants.OK).json({'annotations' : userDoc.annotations});
+                    }
+                });
+            } else {
+                let err = new Error('User must have admin credentials to retrieve data of other users');
+                err.code = constants.UNAUTHORIZED;
+                throw err;
+            }
+        } else {
+            // Retrieve all of the annotations by the user
+            return res.status(constants.OK).json({'annotations' : userDoc.annotations});
+        }
     }).catch((err) => {
         util.log(`Error in retrieveUserAnnotations in user middleware.\nError Message: ${err.message}`);
         return res.status(err.code).json({message : err.message});

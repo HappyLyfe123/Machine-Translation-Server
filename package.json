@@ -1,0 +1,36 @@
+{
+  "name": "meetkai-test",
+  "version": "1.0.0",
+  "description": "Test server for MeetKai job application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PenguinDan/MeetKai-Test.git"
+  },
+  "author": "Daniel Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PenguinDan/MeetKai-Test/issues"
+  },
+  "homepage": "https://github.com/PenguinDan/MeetKai-Test#readme",
+  "dependencies": {
+    "@google-cloud/translate": "^2.1.2",
+    "bcrypt": "^3.0.2",
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "dgram": "^1.0.1",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.3.12",
+    "rapidapi-connect": "0.0.6",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "unirest": "^0.5.1",
+    "uuid": "^3.3.2",
+    "winston": "^3.1.0"
+  }
+}

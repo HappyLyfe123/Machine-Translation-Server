@@ -29,12 +29,12 @@ function createUser(req, res) {
         }
 
         return User.createUser(username, password, isAdminAccount);
-    }).then((user) => {
+    }).then((userDoc) => {
         util.log('User account created successfully!');
         return res.status(constants.CREATED).json({
             message : 'User account created successfully',
-            accessToken : user.accessToken,
-            refreshToken : user.refreshToken
+            accessToken : userDoc.accessToken,
+            refreshToken : userDoc.refreshToken
         });
     }).catch((err) => {
         // Error while attempting to create a user
@@ -64,13 +64,15 @@ function loginUser(req, res) {
         }
         // Authenticate the user information
         return User.authenticate(username, password);
-    }).then((user) => {
+    }).then((userDoc) => {
         util.log('User has been authenticated successfully');
+
         // Return the user their tokens
         return res.status(constants.ACCEPTED).json({
-            message : 'Successfull authentication',
-            accessToken : user.accessToken,
-            refreshToken : user.refreshToken
+            'message' : 'Successfull authentication',
+            'accessToken' : userDoc.accessToken,
+            'refreshToken' : userDoc.refreshToken,
+            'isAdmin' : userDoc.isAdmin
         });
     }).catch((err) => {
         // Error while attempting to create a user
@@ -101,7 +103,7 @@ function retrieveUserAnnotations(req, res) {
         // are an admin
         if(req.get('targetUser')) {
             if(userDoc.isAdmin) {
-                User.findOne({'username' : req.get('targetUser')}).exec(function(userDoc) {
+                User.findOne({'username' : req.get('targetUser').toLowerCase()}).exec(function(userDoc) {
                     // The user specified by the admin account doesn't exist
                     if(!userDoc) {
                         util.log('User specified by admin account for annotation retrieval does not exist');

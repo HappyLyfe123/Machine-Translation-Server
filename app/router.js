@@ -46,6 +46,10 @@ function routing(router) {
         appMiddleware.annotatePhrase(req, res);
     });
 
+    router.route('/phrase/annotations').get((req, res)=>{
+        appMiddleware.retrieveSourceAnnotations(req, res);
+    });
+    
     return router;
 }
 

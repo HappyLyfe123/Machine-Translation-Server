@@ -88,11 +88,10 @@ function getPhrase(req, res){
             return Source.find().sort({annotationCount : 'asc'}).limit(1).exec();
         }
     }).then((result) => {
+        // Make phrase visible to the subsequent promises
         if (number > 50) {
-            // Make phrase visible to the subsequent promises
             phrase = result;
         } else {
-            util.log(result);
             phrase = result[0].phrase;
         }
 
@@ -390,7 +389,7 @@ function annotatePhrase(req, res) {
             // the user is not updating a previous one
             Source.updateOne({'hash' : sourceDoc.hash}, {
                 $inc : {
-                    annotationCount : -userHasUpdated + 1
+                    'annotationCount' : -userHasUpdated + 1
                 },
                 $set : {
                     'annotations' : sourceDoc.annotations
@@ -401,12 +400,60 @@ function annotatePhrase(req, res) {
         return res.status(constants.ACCEPTED).json({'message' : 'Successfully added user annotation'});
     }).catch((err) => {
         util.log(`Error in annotatePhrase in application middleware.\nError Message: ${err.message}`);
-        return res.status(err.code).json({message : err.message});
+        return res.status(err.code).json({'message' : err.message});
+    });
+}
+
+
+// Retrieve all of the annotations for a source object
+// Must contain admin privilegdes
+function retrieveSourceAnnotations(req, res) {
+    // Authenticate whether the request is coming from the proper client
+    sec.authenticateApp(req.get('clientId')).then((result) => {
+        // Authenticate whether the user is authorized to make a request
+        return sec.authorizeUser(req.get('username'), req.get('accessToken'));
+    }).then((userDoc)=> {
+        // Check whether the user has admin privilegdes
+        if(!userDoc.isAdmin){
+            let err = new Error('User must contain admin privileges for this operation');
+            err.code = constants.UNAUTHORIZED;
+            throw err;
+        }
+
+        // Retrieve the request hash or phrase, hash takes priority
+        if(req.get('hash')) {
+            return Source.findOne({'hash' : req.get('hash')});
+        } else if(req.get('phrase')) {
+            // Properly hash the phrase and get the hash
+            let hashedPhrase = hashPhrase(req.get('phrase'));
+            return Source.findOne({'hash' : hashedPhrase});
+        } else {
+            // The request is the hash or phrase values
+            let err = new Error('Request must include either hash or phrase values');
+            err.code = constants.BAD_REQUEST;
+            throw err;
+        }
+    }).then((sourceDoc) =>{
+        // The source document with the specified hash does not exist
+        if(!sourceDoc) {
+            let err = new Error('Source for the phrase or hash does not exist');
+            err.code = constants.NOT_FOUND;
+            throw err;
+        } 
+
+        return res.status(constants.OK).json({
+            'phrase' : sourceDoc.phrase,
+            'annotations' : sourceDoc.annotations
+        });
+    }).catch((err) =>{
+        util.log(`Error in retrieveSourceAnnotations in application middleware.\nError Message: ${err.message}`);
+        return res.status(err.code).json({'message' : err.message});
     });
 }
 
 module.exports = {
     getPhrase,
     addPhrase,
-    annotatePhrase
+    annotatePhrase,
+    retrieveSourceAnnotations
 }

@@ -38,52 +38,54 @@ const UserSchema = new mongoose.Schema({
 UserSchema.statics.authenticate = function(username, password) {
     return new Promise((resolve, reject) => {
         // Attempt to find a user with the given username
-        User.findOne({'username' : username}).exec(async function(err, user) {
+        User.findOne({'username' : username.toLowerCase()}).exec(async function(err, userDoc) {
             // Error Cases
             if (err) {
                 util.log('Database error for authenticate');
                 // Database error
                 let err = new Error('Server error');
-                err.status = constants.INTERNAL_SERVER_ERROR;
+                err.code = constants.INTERNAL_SERVER_ERROR;
                 reject(err);
                 return;
-            } else if (!user) {
+            } else if (!userDoc) {
                 util.log('User not found for authenticate');
                 // Invalid User error
                 let err = new Error('User not found');
-                err.status = constants.NOT_FOUND;
+                err.code = constants.NOT_FOUND;
                 reject(err);
                 return;
             }
 
             // User exists, check if the password given by the user is valid
-            let result = await bcrypt.compare(password, user.password)
+            let result = await bcrypt.compare(password, userDoc.password)
 
             // Passwords match, send the user their access and refresh tokens
             if (result === true) {
                 util.log('Passwords match for user login attempt');
                 const sec = require('../helper/security');
 
+                // Generate the refresh and acces tokens for the user
                 let accessToken = sec.generateToken(sec.Token.ACCESS);
-                // Valid password, return a new access token and refresh token object
-                user.accessToken.token = accessToken.token;
-                // Expiration for Access Token = Current Time + 30 minutes
-                user.accessToken.expiration = accessToken.expiration;
-
                 let refreshToken = sec.generateToken(sec.Token.REFRESH);
-                // The refresh token
-                user.refreshToken.token = refreshToken.token;
-                // Expiration for Refresh Token = Current Time + 12 Hours
-                user.refreshToken.expiration = refreshToken.expiration;
 
-                // Save the user object
-                user.save().then((savedUser) => {
+                // Update the user object
+                User.updateOne({'username' : userDoc.username} , {
+                    $set: {
+                        'accessToken' : accessToken,
+                        'refreshToken' : refreshToken
+                    }
+                }).exec().then((result) => {
                     util.log('Successfully saved user tokens');
-                    resolve(savedUser);
+                    // Return the access and refresh tokens
+                    resolve({
+                        'accessToken' : accessToken,
+                        'refreshToken' : refreshToken
+                    });
                 }).catch((err) => {
-                    util.log('Error in saving user information for in UserSchema.authenticate');
+                    util.log('Error in saving user information in UserSchema.authenticate');
                     reject(err);
                 });
+
             } else {
                 let err = new Error('Username and Password combination not found');
                 err.code = constants.UNAUTHORIZED;
@@ -106,16 +108,10 @@ UserSchema.statics.createUser = async function(username, password, isAdmin) {
 
     // Create a user object
     let newUser = {
-        'username' : username,
+        'username' : username.toLowerCase(),
         'password' : passwordHash,
-        'accessToken' : {
-            'token' : accessToken.token,
-            'expiration' : accessToken.expiration
-        },
-        'refreshToken' : {
-            'token' : refreshToken.token,
-            'expiration' : refreshToken.expiration
-        },
+        'accessToken' : accessToken,
+        'refreshToken' : refreshToken,
         'isAdmin' : isAdmin,
         annotations : []
     };

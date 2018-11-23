@@ -7,6 +7,7 @@ const uuid = require('uuid/v4');
 const constants = require('./constants');
 const crypto = require('crypto');
 const User = require('../schemas/user');
+const moment = require('moment');
 
 // File public constants
 const Token = {
@@ -41,15 +42,16 @@ function authenticateApp(clientId) {
 function generateToken(type) {
     // Valid password, return a new access token and refresh token object
     let token = uuid();
+    let currTime = new Date();
 
     if (type === Token.ACCESS) {
         util.log('Generating Access token');
         // Expiration for Access Token = Current Time + 15 minutes
-        var expiration = Date.now() + (15 * 60000);
+        var expiration = moment(currTime).add(15, 'm').toDate();
     } else if(type === Token.REFRESH) {
         util.log('Generating Refresh token');
         // Expiration for Refresh Token = Current Time + 4 Hours
-        var expiration = Date.now() + (240 * 60000);
+        var expiration = moment(currTime).add(4, 'h').toDate();
     } else {
         let err = new Error('Paramereter must be of type security.Token');
         err.code = constants.INTERNAL_SERVER_ERROR;
@@ -83,7 +85,7 @@ function authorizeUser(username, accessToken) {
         util.log('Querying user from authorizeUser in security');
 
         // Try to find a user with the given username
-        User.findOne({'username' : username}).exec().then((userDoc) => {
+        User.findOne({'username' : username.toLowerCase()}).exec().then((userDoc) => {
             // User was not found
             if (!userDoc) {
                 let err = new Error('Invalid user');
@@ -104,7 +106,7 @@ function authorizeUser(username, accessToken) {
             // If the tokens match, then make sure that the expiration
             // time for the token has not expired
             let expiration = userDoc.accessToken.expiration;
-            if (expiration <= Date.now()) {
+            if (moment().isAfter(expiration)) {
                 let err = new Error('Token has expired');
                 err.code = constants.NOT_ACCEPTABLE;
                 reject(err);
@@ -135,10 +137,11 @@ function renewToken(username, refreshToken) {
             reject(err);
             return;
         }
-
-        User.findOne({'username' : username}).exec().then((result) =>{
+        username = username.toLowerCase();
+        
+        User.findOne({'username' : username}).exec().then((userDoc) =>{
             // There is no user with the specified username
-            if(!result) {
+            if(!userDoc) {
                 let err = new Error('Invalid user');
                 err.code = constants.UNAUTHORIZED;
                 reject(err);
@@ -146,7 +149,7 @@ function renewToken(username, refreshToken) {
             }
 
             // Check whether the refresh tokens match
-            if(result.refreshToken.token !== refreshToken) {
+            if(userDoc.refreshToken.token !== refreshToken) {
                 let err = new Error('Invalid refresh token');
                 err.code = constants.UNAUTHORIZED;
                 reject(err);
@@ -154,7 +157,7 @@ function renewToken(username, refreshToken) {
             }
 
             // Check whether the refresh token has expired
-            if(result.refreshToken.expiration <= Date.now()) {
+            if(moment().isAfter(userDoc.refreshToken.expiration)) {
                 let err = new Error('Refresh token is expired.');
                 err.code = constants.NOT_ACCEPTABLE;
                 reject(err);
@@ -167,10 +170,7 @@ function renewToken(username, refreshToken) {
 
             return User.where({'username' : username}).updateOne({
                 $set : {
-                    accessToken : {
-                        token : newAccessToken.token,
-                        expiration : newAccessToken.expiration
-                    }
+                    'accessToken' : newAccessToken
                 }
             }).exec();
         }).then((result) => {

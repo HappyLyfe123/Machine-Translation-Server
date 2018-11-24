@@ -65,22 +65,19 @@ UserSchema.statics.authenticate = function(username, password) {
                 const sec = require('../helper/security');
 
                 // Generate the refresh and acces tokens for the user
-                let accessToken = sec.generateToken(sec.Token.ACCESS);
-                let refreshToken = sec.generateToken(sec.Token.REFRESH);
+                userDoc.accessToken = sec.generateToken(sec.Token.ACCESS);
+                userDoc.refreshToken = sec.generateToken(sec.Token.REFRESH);
 
                 // Update the user object
                 User.updateOne({'username' : userDoc.username} , {
                     $set: {
-                        'accessToken' : accessToken,
-                        'refreshToken' : refreshToken
+                        'accessToken' : userDoc.accessToken,
+                        'refreshToken' : userDoc.refreshToken
                     }
                 }).exec().then((result) => {
                     util.log('Successfully saved user tokens');
                     // Return the access and refresh tokens
-                    resolve({
-                        'accessToken' : accessToken,
-                        'refreshToken' : refreshToken
-                    });
+                    resolve(userDoc);
                 }).catch((err) => {
                     util.log('Error in saving user information in UserSchema.authenticate');
                     reject(err);

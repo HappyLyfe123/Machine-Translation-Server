@@ -446,7 +446,8 @@ function retrieveSourceAnnotations(req, res) {
 
         return res.status(constants.OK).json({
             'phrase' : sourceDoc.phrase,
-            'annotations' : sourceDoc.annotations
+            'annotations' : sourceDoc.annotations,
+            'languages' : Array.from(sourceDoc.annotations.keys())
         });
     }).catch((err) =>{
         util.log(`Error in retrieveSourceAnnotations in application middleware.\nError Message: ${err.message}`);

@@ -23,8 +23,10 @@ function createUser(req, res) {
         }
 
         // Check whether the new user is creating an admin account
-        if (req.body.applicationSecret === serverConfig.adminSecret) {
-            var isAdminAccount = true;
+        if (req.body.applicationSecret && req.body.applicationSecret !== serverConfig.adminSecret) {
+            let err = new Error('Incorrect admin secret, cannot create admin account');
+            err.code = constants.UNAUTHORIZED;
+            throw err;
         } else {
             var isAdminAccount = false;
         }
@@ -33,9 +35,11 @@ function createUser(req, res) {
     }).then((userDoc) => {
         util.log('User account created successfully!');
         return res.status(constants.CREATED).json({
-            message : 'User account created successfully',
-            accessToken : userDoc.accessToken,
-            refreshToken : userDoc.refreshToken
+            'message' : 'User account created successfully',
+            'username' : userDoc.username,
+            'accessToken' : userDoc.accessToken,
+            'refreshToken' : userDoc.refreshToken,
+            'isAdmin' : userDoc.isAdmin
         });
     }).catch((err) => {
         // Error while attempting to create a user
@@ -68,9 +72,11 @@ function loginUser(req, res) {
     }).then((userDoc) => {
         util.log('User has been authenticated successfully');
 
+        console.log(userDoc);
         // Return the user their tokens
         return res.status(constants.ACCEPTED).json({
-            'message' : 'Successfull authentication',
+            'message' : 'Successful authentication',
+            'username' : userDoc.username,
             'accessToken' : userDoc.accessToken,
             'refreshToken' : userDoc.refreshToken,
             'isAdmin' : userDoc.isAdmin

@@ -5,6 +5,7 @@ const constants = require('./helper/constants');
 const util = require('./helper/utilities');
 const sec = require('./helper/security');
 const User = require('./schemas/user');
+const {hashPhrase , Source} = require('./schemas/source');
 const serverConfig = require('../config/server');
 
 // Creates a user
@@ -96,31 +97,73 @@ function renewToken(req, res) {
 
 // Retrieves the User's annotations
 function retrieveUserAnnotations(req, res) {
+    let targetUserDoc = null;
     sec.authenticateApp(req.get('clientId')).then((result)=>{
         return sec.authorizeUser(req.get('username'), req.get('accessToken'));
-    }).then((userDoc)=> {
+    }).then(async (userDoc)=> {
         // If the user specifies a target user in their request, check if they 
-        // are an admin
-        if(req.get('targetUser')) {
-            if(userDoc.isAdmin) {
-                User.findOne({'username' : req.get('targetUser').toLowerCase()}).exec(function(userDoc) {
-                    // The user specified by the admin account doesn't exist
-                    if(!userDoc) {
-                        util.log('User specified by admin account for annotation retrieval does not exist');
-                        return res.status(constants.NOT_FOUND).json({message : 'User not found'});
-                    } else {
-                        return res.status(constants.OK).json({'annotations' : userDoc.annotations});
-                    }
-                });
-            } else {
-                let err = new Error('User must have admin credentials to retrieve data of other users');
-                err.code = constants.UNAUTHORIZED;
+        // are an admin, if they aren't an admin, then throw an error
+        if(req.get('targetUser') && !userDoc.isAdmin) {
+            let err = new Error('User must have admin credentials to retrieve data of other users');
+            err.code = constants.UNAUTHORIZED;
+            throw err;            
+        } else if(req.get('targetUser')){
+            // An admin account is attempting to retrieve another user's annotations
+            userDoc = await User.findOne({'username' : req.get('targetUser')}).exec();
+            if (!userDoc) {
+                let err = new Error('User specified by admin account does not exist');
+                err.code = constants.NOT_FOUND;
                 throw err;
             }
-        } else {
-            // Retrieve all of the annotations by the user
-            return res.status(constants.OK).json({'annotations' : userDoc.annotations});
         }
+
+        // Return the document in which to retrieve the annotations for
+        return userDoc;
+    }).then((userDoc) => {
+        targetUserDoc = userDoc;
+        // Get all of the hash values for all of the user annotations
+        let hashValList = new Array();
+        hashValList.push(...Array.from(targetUserDoc.annotations.keys()));
+
+        // Do a query with the list of hash values
+        return Source.find({
+            'hash' : {
+                $in : hashValList
+            }
+        }).select('hash phrase annotations').exec();
+    }).then((sourceDocList) =>{
+        let userAnnotationList = new Array();
+
+        // Retrieve the language => hash values for the user
+        sourceDocList.forEach((sourceItem) => {
+            // The current hash value
+            let currHashVal = sourceItem.hash;
+            // The original english phrase of the hash value
+            let originalPhrase = sourceItem.phrase;
+            
+            // A mapping of the user's annotations
+            let annotationMap = {
+                'phrase' : originalPhrase,
+                'hash' : currHashVal,
+                'list' : []
+            };
+            // Create a list of the languages the user annotated for the current hash
+            targetUserDoc.annotations.get(currHashVal).forEach((value, language, anMap) => {
+                // Retrieve the translation for the current hash in the current language
+                let map = {};
+                map.language = language;
+                map.azureTranslation = sourceItem.annotations.get(language).azure.translation;
+                map.isAzureCorrect = value.isAzureCorrect;
+                map.googleTranslation = sourceItem.annotations.get(language).google.translation;
+                map.isGoogleCorrect = value.isGoogleCorrect;
+                map.yandexTranslation = sourceItem.annotations.get(language).yandex.translation;
+                map.isYandexCorrect = value.isYandexCorrect;
+                annotationMap.list.push(map);
+            });
+            // Append the newly created map to the user annotation list
+            userAnnotationList.push(annotationMap);
+        });
+        return res.status(constants.OK).json({'annotations' : userAnnotationList});
     }).catch((err) => {
         util.log(`Error in retrieveUserAnnotations in user middleware.\nError Message: ${err.message}`);
         return res.status(err.code).json({message : err.message});

@@ -65,7 +65,7 @@ function getPhrase(req, res){
     sec.authenticateApp(req.get('clientId')).then((resolve) => {
         // Authorize the user
         return sec.authorizeUser(req.get('username'), req.get('accessToken'));
-    }).then((userDoc) =>{
+    }).then(async (userDoc) =>{
         // The language is not available
         languageAbr = req.get('language');
         if(!languageAbr) {
@@ -77,15 +77,22 @@ function getPhrase(req, res){
         // 0 - 50: Retrieve a word with low annotations from Source
         // 51 - 75: Retrieve a random definition from the Words API
         // 76 - 100: Retrieve a random example phrase from the Words API
-        number = util.getRandomNumber(0, 49);
+        number = util.getRandomNumber(0, 100);
         if (number > 50) {
             util.log('Sending Random Phrase from WordsAPI');
             return getRandomPhrase(number);
         } else {
             util.log('Sending phrase from database');
-            // Choose from the database a random phrase with the lowest
-            // number of annotations
-            return Source.find().sort({annotationCount : 'asc'}).limit(1).exec();
+            let documentCount = await Source.estimatedDocumentCount().exec();
+            // Check whether the source database is empty and return a source
+            // accordingly
+            if (documentCount > 0) {
+                return Source.find().sort({annotationCount : 'asc'}).limit(1).exec();
+            } else {
+                util.log('Database is empty, returning random source instead');
+                number += 50;
+                return getRandomPhrase(number);
+            }
         }
     }).then((result) => {
         // Make phrase visible to the subsequent promises
@@ -279,9 +286,8 @@ function annotatePhrase(req, res) {
         return sec.authorizeUser(req.body.username, req.body.accessToken);
     }).then((userDoc)=> {
         // Request does not contain all fields
-        if (!req.body.hash || !req.body.languageAbr || !req.body.isAzureCorrect || !req.body.azureTranslation ||
-                !req.body.googleTranslation || !req.body.isGoogleCorrect || !req.body.yandexTranslation || 
-                !req.body.isYandexCorrect) {
+        if (!req.body.hash || !req.body.languageAbr || !req.body.isAzureCorrect || 
+            !req.body.isGoogleCorrect || !req.body.isYandexCorrect) {
             util.log('Malformed request');
             let err = new Error('Request body is incomplete');
             err.code = constants.BAD_REQUEST;
@@ -301,7 +307,7 @@ function annotatePhrase(req, res) {
         // Annotating the same phrase, but with a different language => Just add
         // Updating their previous annotations of the same phrase => Check then add
 
-        // If the user has never annotated this hash before, add it to their map
+        // If the user has never annotated in this language before
         if(!userDoc.annotations.get(req.body.hash)) {
             userDoc.annotations.set(req.body.hash, new Map());
         }
@@ -330,11 +336,8 @@ function annotatePhrase(req, res) {
 
         // Update the user document
         userDoc.annotations.get(req.body.hash).set(language, {
-            'azureTranslation' : req.body.azureTranslation,
             'isAzureCorrect' : req.body.isAzureCorrect,
-            'googleTranslation' : req.body.googleTranslation,
             'isGoogleCorrect' : req.body.isGoogleCorrect,
-            'yandexTranslation' : req.body.yandexTranslation,
             'isYandexCorrect' : req.body.isYandexCorrect
         });
         User.updateOne({'username' : userDoc.username}, {

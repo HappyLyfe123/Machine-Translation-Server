@@ -184,6 +184,10 @@ function retrieveUserAnnotations(req, res) {
     });
 }
 
+function getMonitoringAccess(){
+    
+}
+
 module.exports = {
     createUser,
     loginUser,

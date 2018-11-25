@@ -403,25 +403,26 @@ function annotatePhrase(req, res) {
                     'annotations' : sourceDoc.annotations
                 }
             }).exec();
-        }
 
-        // Send to the Monitoring service
-        ipc.connectTo('MonitorServer', ()=> {
-            // On connected, send the message
-            ipc.of.MonitorServer.on('connect', ()=> {
-                ipc.of.MonitorServer.emit(
-                    `User: ${username}\n` +
-                    `Phrase: ${sourceDoc.phrase}\n` +
-                    `Language: ${language}\n` +
-                    `Azure Translations: ${sourceDoc.annotations.get(language).azure.translation}\n` + 
-                    `Azure is Correct: ${req.body.isAzureCorrect}\n` +
-                    `Google Translations: ${sourceDoc.annotations.get(language).google.translation}\n` + 
-                    `Google is Correct: ${req.body.isGoogleCorrect}\n` +
-                    `Yandex Translations: ${sourceDoc.annotations.get(language).yandex.translation}\n` + 
-                    `Yandex is Correct: ${req.body.isYandexCorrect}\n`
-                );
-            })
-        });
+            // Send to the Monitoring service
+            ipc.connectTo('MonitorServer', ()=> {
+                // On connected, send the message
+                ipc.of.MonitorServer.on('connect', ()=> {
+                    ipc.of.MonitorServer.emit('message',
+                        `User: ${username}\n` +
+                        `Phrase: ${sourceDoc.phrase}\n` +
+                        `Language: ${language}\n` +
+                        `Azure Translations: ${sourceDoc.annotations.get(language).azure.translation}\n` + 
+                        `Azure is Correct: ${req.body.isAzureCorrect}\n` +
+                        `Google Translations: ${sourceDoc.annotations.get(language).google.translation}\n` + 
+                        `Google is Correct: ${req.body.isGoogleCorrect}\n` +
+                        `Yandex Translations: ${sourceDoc.annotations.get(language).yandex.translation}\n` + 
+                        `Yandex is Correct: ${req.body.isYandexCorrect}\n`
+                    );
+                    ipc.disconnect('MonitorServer');
+                });
+            });
+        }
         return res.status(constants.ACCEPTED).json({'message' : 'Successfully added user annotation'});
     }).catch((err) => {
         util.log(`Error in annotatePhrase in application middleware.\nError Message: ${err.message}`);

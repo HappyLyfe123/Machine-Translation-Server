@@ -31,6 +31,11 @@ function routing(router) {
         userMiddleware.retrieveUserAnnotations(req, res);
     });
 
+    // Authenticates and authorizes whether a user is allowed monitoring access
+    router.route('/user/monitor').get((req, res) => {
+        userMiddleware.getMonitoringAccess(req, res);
+    });
+
     // Retrieve a sentence
     router.route('/phrase').get((req, res) => {
         appMiddleware.getPhrase(req, res);

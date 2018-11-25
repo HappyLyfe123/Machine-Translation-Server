@@ -7,6 +7,7 @@ const sec = require('./helper/security');
 const User = require('./schemas/user');
 const {hashPhrase , Source} = require('./schemas/source');
 const serverConfig = require('../config/server');
+const ipc = require('node-ipc');
 
 // Creates a user
 function createUser(req, res) {
@@ -184,13 +185,38 @@ function retrieveUserAnnotations(req, res) {
     });
 }
 
-function getMonitoringAccess(){
-    
+// Authenticate the user and add them to a list of allowed monitors
+function getMonitoringAccess(req, res) {
+    sec.authenticateApp(req.get('clientId')).then((result)=>{
+        return sec.authorizeUser(req.get('username'), req.get('accessToken'));
+    }).then((userDoc)=>{
+        // User is not authorized to be a monitor
+        if(!userDoc.isAdmin) {
+            let err = new Error('User must be admin');
+            err.code = constants.UNAUTHORIZED;
+            throw err;
+        }
+
+        // Send the IPC Message of the authorized user's ip address
+        ipc.connectTo('MonitorServer', ()=> {
+            // On connected, send the message
+            ipc.of.MonitorServer.on('connect', ()=> {
+                util.log('Sending access address to Monitoring IPC Server');
+                ipc.of.MonitorServer.emit('accessAddress', req.ip);
+                ipc.disconnect('MonitorServer');
+            });
+        });
+        return res.status(constants.ACCEPTED).json({message : 'Authorized user for monitoring'});
+    }).catch((err) => {
+        util.log(`Error in getMonitoringAccess in user middleware.\nError Message: ${err.message}`);
+        return res.status(err.code).json({message : err.message});
+    });
 }
 
 module.exports = {
     createUser,
     loginUser,
     renewToken,
+    getMonitoringAccess,
     retrieveUserAnnotations
 }

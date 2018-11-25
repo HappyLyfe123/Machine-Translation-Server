@@ -9,12 +9,11 @@ const dbConfig = require('./config/mongo.json');
 const http = require('http');
 const https = require('https');
 const routes = require('./app/router');
-const util = require('./app/helper/utilities')
+const util = require('./app/helper/utilities');
+const { fork } = require('child_process');
 // Server routing modules
 const express = require('express');
 const bodyParser = require('body-parser');
-// Server network modules
-const dgram = require('dgram');
 // Server security modules
 const helmet = require('helmet');
 
@@ -63,5 +62,6 @@ mongoose.connect(dbConfig.url, {useNewUrlParser : true }, (err) => {
     }
 });
 
-
+// The process for Monitoring
+fork('monitor.js');
 

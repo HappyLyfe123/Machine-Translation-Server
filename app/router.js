@@ -46,10 +46,16 @@ function routing(router) {
         appMiddleware.annotatePhrase(req, res);
     });
 
+    // Retrieve all annotations for a source
     router.route('/phrase/annotations').get((req, res)=>{
         appMiddleware.retrieveSourceAnnotations(req, res);
     });
-    
+
+    // Retrieve all hash values (limit 50) for source
+    router.route('/phrase/hashes').get((req, res) => {
+        appMiddleware.retrieveSourceHashes(req, res);
+    });
+
     return router;
 }
 

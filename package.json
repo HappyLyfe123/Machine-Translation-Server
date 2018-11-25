@@ -27,6 +27,7 @@
     "jsonwebtoken": "^8.4.0",
     "moment": "^2.22.2",
     "mongoose": "^5.3.12",
+    "node-ipc": "^9.1.1",
     "rapidapi-connect": "0.0.6",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",

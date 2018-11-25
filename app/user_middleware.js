@@ -23,17 +23,26 @@ function createUser(req, res) {
         }
 
         // Check whether the new user is creating an admin account
-        if (req.body.applicationSecret && req.body.applicationSecret !== serverConfig.adminSecret) {
-            let err = new Error('Incorrect admin secret, cannot create admin account');
-            err.code = constants.UNAUTHORIZED;
-            throw err;
+        if (req.body.applicationSecret) {
+            if (req.body.applicationSecret !== serverConfig.adminSecret) {
+                let err = new Error('Incorrect admin secret, cannot create admin account');
+                err.code = constants.UNAUTHORIZED;
+                throw err;
+            } else {
+                var isAdminAccount = true;
+            }
         } else {
             var isAdminAccount = false;
         }
 
         return User.createUser(username, password, isAdminAccount);
     }).then((userDoc) => {
-        util.log('User account created successfully!');
+        if (userDoc.isAdmin) {
+            util.log('Admin account created successfully');
+        } else {
+            util.log('User account created successfully!');
+        }
+
         return res.status(constants.CREATED).json({
             'message' : 'User account created successfully',
             'username' : userDoc.username,
@@ -72,7 +81,6 @@ function loginUser(req, res) {
     }).then((userDoc) => {
         util.log('User has been authenticated successfully');
 
-        console.log(userDoc);
         // Return the user their tokens
         return res.status(constants.ACCEPTED).json({
             'message' : 'Successful authentication',
@@ -115,7 +123,7 @@ function retrieveUserAnnotations(req, res) {
             throw err;            
         } else if(req.get('targetUser')){
             // An admin account is attempting to retrieve another user's annotations
-            userDoc = await User.findOne({'username' : req.get('targetUser')}).exec();
+            userDoc = await User.findOne({'username' : req.get('targetUser').toLowerCase()}).exec();
             if (!userDoc) {
                 let err = new Error('User specified by admin account does not exist');
                 err.code = constants.NOT_FOUND;

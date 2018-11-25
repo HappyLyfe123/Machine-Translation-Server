@@ -17,6 +17,7 @@ with open('./config/server.json', 'w') as server_file:
     # Setup HTTP and HTTPS ports
     http_port = int(input('Http Port: '))
     https_port = int(input('Https Port: '))
+    monitor_port = int(input('Monitoring UDP Port: '))
 
     # Generate client secret and client id
     client_id = str(uuid.uuid4())
@@ -68,6 +69,7 @@ with open('./config/server.json', 'w') as server_file:
         'fullchainPath' : fullchain_path,
         'httpPort' : http_port,
         'httpsPort' : https_port,
+        'monitorPort' : monitor_port,
         'clientId' : client_id,
         'adminSecret' : admin_secret
     }))

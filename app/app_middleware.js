@@ -11,6 +11,7 @@ const uuid = require('uuid/v4');
 const request = require('request-promise');
 const {hashPhrase , Source} = require('./schemas/source');
 const User = require('./schemas/user');
+const ipc = require('node-ipc');
 
 // Wrapper for the unirest get method for the example sentence
 // If the random number is greater than 75, we retrieve a definition
@@ -87,7 +88,7 @@ function getPhrase(req, res){
             // Check whether the source database is empty and return a source
             // accordingly
             if (documentCount > 0) {
-                return Source.find().sort({annotationCount : 'asc'}).limit(1).exec();
+                return Source.find().sort({annotationCount : 'asc'}).limit(5).exec();
             } else {
                 util.log('Database is empty, returning random source instead');
                 number += 50;
@@ -99,7 +100,8 @@ function getPhrase(req, res){
         if (number > 50) {
             phrase = result;
         } else {
-            phrase = result[0].phrase;
+            let randomIndex = util.getRandomNumber(0, 5)
+            phrase = result[randomIndex].phrase;
         }
 
         // Get the phrase's hash
@@ -280,6 +282,7 @@ function annotatePhrase(req, res) {
     let userHasUpdatedGoogle = false;
     let userHasUpdatedYandex = false;
     let userHasUpdated = false;
+    let username = null;
 
     sec.authenticateApp(req.get('clientId')).then((result) => {
         // Authorize the user
@@ -301,6 +304,8 @@ function annotatePhrase(req, res) {
 
         // Set the full lanugage title
         language = constants[req.body.languageAbr];
+        // Set the username for monitoring
+        username = userDoc.username;
 
         // Three user case scenarios:
         // Annotating the phrase for the first time ever => Just add
@@ -400,6 +405,23 @@ function annotatePhrase(req, res) {
             }).exec();
         }
 
+        // Send to the Monitoring service
+        ipc.connectTo('MonitorServer', ()=> {
+            // On connected, send the message
+            ipc.of.MonitorServer.on('connect', ()=> {
+                ipc.of.MonitorServer.emit(
+                    `User: ${username}\n` +
+                    `Phrase: ${sourceDoc.phrase}\n` +
+                    `Language: ${language}\n` +
+                    `Azure Translations: ${sourceDoc.annotations.get(language).azure.translation}\n` + 
+                    `Azure is Correct: ${req.body.isAzureCorrect}\n` +
+                    `Google Translations: ${sourceDoc.annotations.get(language).google.translation}\n` + 
+                    `Google is Correct: ${req.body.isGoogleCorrect}\n` +
+                    `Yandex Translations: ${sourceDoc.annotations.get(language).yandex.translation}\n` + 
+                    `Yandex is Correct: ${req.body.isYandexCorrect}\n`
+                );
+            })
+        });
         return res.status(constants.ACCEPTED).json({'message' : 'Successfully added user annotation'});
     }).catch((err) => {
         util.log(`Error in annotatePhrase in application middleware.\nError Message: ${err.message}`);
@@ -455,9 +477,32 @@ function retrieveSourceAnnotations(req, res) {
     });
 }
 
+// Allows an admin to retrieve all of the hashes for sources stored in the database
+function retrieveSourceHashes(req, res) {
+    sec.authenticateApp(req.get('clientId')).then((result)=>{
+        // Authorize the user account
+        return sec.authorizeUser(req.get('username'), req.get('accessToken'));
+    }).then((userDoc) =>{
+        if(!userDoc.isAdmin) {
+            let err = new Error('User must be admin');
+            err.code = constants.UNAUTHORIZED;
+            throw err;
+        }
+        // Do a query for all of the hash values
+        return Source.find().select('hash').limit(50).exec();
+    }).then((hashList)=>{
+        util.log('Returning hash list');
+        return res.status(constants.OK).json({'list' : hashList});
+    }).catch((err) => {
+        util.log(`Error in retrieveHashList in application middleware.\nError Message: ${err.message}`);
+        return res.status(err.code).json({'message' : err.message});
+    });
+}
+
 module.exports = {
     getPhrase,
     addPhrase,
     annotatePhrase,
+    retrieveSourceHashes,
     retrieveSourceAnnotations
 }

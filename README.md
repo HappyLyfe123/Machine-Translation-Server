@@ -38,17 +38,22 @@ REQUIREMENTS:
    * password : danielktesting1
 2. Go to the following link:
    * https://console.cloud.google.com/compute/instances?project=united-sunbeam-223701
-3. Click on SSH, the server should already be running.
-4. sudo apt update
-5. sudo apt upgrade 
-6. sudo apt install -y git
-7. git clone https://github.com/PenguinDan/MeetKai-Server.git
-8. cd MeetKai-Server
-9. sudo ./setup.sh
-   * Answer questions and add email meet.k.testing.daniel@gmail.com when prompted
-   * Agree and Yes
-   * Yes to potentially messing up the connection
+   * Make sure that you are logged in as meet.k.testing.daniel@gmail.com
+3. Click on SSH, the server should already be running
+4. type sudo apt update
+5. type sudo apt upgrade, Yes when prompted
+6. type sudo apt install -y git
+7. type git clone https://github.com/PenguinDan/MeetKai-Server.git
+8. type cd MeetKai-Server
+9. type sudo ./setup.sh
+   * If prompted about Location, Type 2 for America
+   * If prompted about timezone, type 85 for Los Angeles
+   * Use email meet.k.testing.daniel@gmail.com
+   * Type "A" to agree to terms
+   * Type "Yes" to agree
+   * Type Yes to potentially messing up the connection
 10. sudo npm start
+11. The server is setup, you can connect to it using the Postman json files and specified in the Testing Section or use the Android application
 
 ### Testing
 Extensive E2E Testing Using Postman
@@ -60,6 +65,9 @@ Extensive E2E Testing Using Postman
 
 Android Client Side - Visual Client Side Testing
 * [Android Meet-Kai Client](https://github.com/PenguinDan/MeetKai-Test-Client)
+
+!!!INFORMATION!!!
+Admin/Application Secret is "apple" to create an admin account
 
 ## Architecture
 ### Backend Server Framework of Choice

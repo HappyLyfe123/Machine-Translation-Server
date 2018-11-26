@@ -20,8 +20,8 @@ User and Application Authentication/Authorization restrictions.
 ## Installation
 REQUIREMENTS:
 * The server must have an external IP Address and a domain name pointing to the IP address
-git clone https://github.com/PenguinDan/MeetKai-Server.git
-run setup.sh
+git clone https://github.com/PenguinDan/MeetKai-Server.git <br>
+run ./setup.sh
 
 ### Testing
 Extensive E2E Testing Using Postman

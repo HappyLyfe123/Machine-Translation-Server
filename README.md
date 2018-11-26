@@ -39,10 +39,16 @@ REQUIREMENTS:
 2. Go to the following link:
    * https://console.cloud.google.com/compute/instances?project=united-sunbeam-223701
 3. Click on SSH, the server should already be running.
-4. git clone https://github.com/PenguinDan/MeetKai-Server.git
-4. cd MeetKai-Server
-5. setup.sh
-6. npm start
+4. sudo apt update
+5. sudo apt upgrade 
+6. sudo apt install -y git
+7. git clone https://github.com/PenguinDan/MeetKai-Server.git
+8. cd MeetKai-Server
+9. sudo ./setup.sh
+   * Answer questions and add email meet.k.testing.daniel@gmail.com when prompted
+   * Agree and Yes
+   * Yes to potentially messing up the connection
+10. sudo npm start
 
 ### Testing
 Extensive E2E Testing Using Postman

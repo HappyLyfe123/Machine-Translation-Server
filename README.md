@@ -20,9 +20,8 @@ User and Application Authentication/Authorization restrictions.
 ## Installation
 REQUIREMENTS:
 * The server must have an external IP Address and a domain name pointing to the IP address
-git clone https://github.com/PenguinDan/MeetKai-Server.git <br>
-Simply Login and run the setup script from the google cloud compute engine <br>
-The server is EMPTY, meaning it has been freshly initialized.
+* Simply Login and run the setup script from the google cloud compute engine <br>
+* The server is EMPTY, meaning it has been freshly initialized.
 * Why?
    * Remove any potential external variables and the necessity of implementing SSL for security reasons as explained in the following sections. I found this way to be the easiest and fastest way for installing and running setup.
 ### Steps:

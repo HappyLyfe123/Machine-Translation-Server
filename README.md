@@ -24,6 +24,13 @@ REQUIREMENTS:
 * The server is EMPTY, meaning it has been freshly initialized.
 * Why?
    * Remove any potential external variables and the necessity of implementing SSL for security reasons as explained in the following sections. I found this way to be the easiest and fastest way for installing and running setup.
+   * External Variables Include:
+         * Firewall blocking a port.
+         * Invalid DNS setup for SSL certificates
+         * Missing OS Files such as Python3, ufw, etc
+         * Clashing npm versions.
+  * I was unable to implement Docker due to time restrictions, I concluded this would be the best course of action to take to eliminate any possible runtime errors.
+  
 ### Steps:
 1. Login to the following google account:
    * username : meet.k.testing.daniel@gmail.com
@@ -31,7 +38,8 @@ REQUIREMENTS:
 2. Go to the following link:
    * https://console.cloud.google.com/compute/instances?project=united-sunbeam-223701
 3. Click on SSH, the server should already be running.
-4. cd Application
+4. git clone https://github.com/PenguinDan/MeetKai-Server.git
+4. cd MeetKai-Server
 5. setup.sh
 6. npm start
 

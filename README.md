@@ -22,7 +22,7 @@ REQUIREMENTS:
 * The server must have an external IP Address and a domain name pointing to the IP address
 * Simply Login and run the setup script from the google cloud compute engine <br>
 * The server is EMPTY, meaning it has been freshly initialized, and nothing added.
-      * I set up EXTERNAL variables such as allowing the instance to run with the Google translator API, the External IP Address to be mapped to the proper domain name. However, I have not written a single line of code in the instance. The setup script should run properly on the empty server.
+   * I set up EXTERNAL variables such as allowing the instance to run with the Google translator API, the External IP Address to be mapped to the proper domain name. However, I have not written a single line of code in the instance. The setup script should run properly on the empty server.
 * Why?
    * Remove any potential external variables and the necessity of implementing SSL for security reasons as explained in the following sections. I found this way to be the easiest and fastest way for installing and running setup.
    * External Variables Include:

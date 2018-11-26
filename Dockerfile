@@ -1,18 +1,21 @@
 # Parent image
-FROM node:10
+FROM node:8
 
 # Main Work Directory
 WORKDIR /server
 
-# Commands to run to initialize the container
-RUN apt update; apt upgrade;
-RUN apt install 
+
+# Install application dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the application Code
+COPY . .
 
 # Expose a port from the container for communication with client
 EXPOSE 80/tcp
 EXPOSE 443/tcp
-EXPOSE 3000/tcp
-EXPOSE 8000/tcp
+EXPOSE 30000/udp
 
-# Expose a port from the container for communication
-EXPOSE 9000/udp
+# Run script for node process
+RUN sudo npm start

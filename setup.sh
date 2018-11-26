@@ -7,6 +7,22 @@ fi
 apt update
 apt upgrade
 
+# Install certbot and setup SSL Certificates
+apt install software-properties-common
+add-apt-repository ppa:certbot/certbot
+apt update
+apt install -y certbot
+certbot certonly --standalone -d penguindan-test.gq -d www.penguindan-test.gq
+
+
+# Setup Firewall
+apt install -y ufw
+ufw allow ssh
+ufw allow http
+ufw allow https
+ufw allow 30000:60000/udp
+ufw enable
+
 # Install node
 echo "Installing Node JS"
 apt install -y nodejs

@@ -7,7 +7,7 @@
 6 silly lifecycle meetkai-test@1.0.0~prestart: no script for prestart, continuing
 7 info lifecycle meetkai-test@1.0.0~start: meetkai-test@1.0.0
 8 verbose lifecycle meetkai-test@1.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle meetkai-test@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/home/meet_k_testing_daniel/MeetKai-Server/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+9 verbose lifecycle meetkai-test@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/home/meet_k_testing_daniel/MeetKai-Server/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 10 verbose lifecycle meetkai-test@1.0.0~start: CWD: /home/meet_k_testing_daniel/MeetKai-Server
 11 silly lifecycle meetkai-test@1.0.0~start: Args: [ '-c', 'node server.js' ]
 12 silly lifecycle meetkai-test@1.0.0~start: Returned: code: 1  signal: null

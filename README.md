@@ -5,6 +5,7 @@ User and Application Authentication/Authorization restrictions.
 ## Table of Contents
 1. [Time Allocation](#time%201%20allocation)
 2. [Installation](#installation)
+    * [Testing](#testing)
 3. [Architecture](#architecture)
    * [Backend Server Framework of Choice](#Backend%201%20Server%201%20Framework%201%20Of%201%20Choice)
    * [Security First Design](#Security%201%20First%201%20Design)
@@ -12,12 +13,14 @@ User and Application Authentication/Authorization restrictions.
 4. [Accomplishment Checklist](#Accomplishment%201%20Checklist)
 
 ## Time Allocation
-32 Hours Server and Client Design and Code implementation
-3 Hours Server and Client End-to-End Testing
-4 Hours Documentation
+32 Hours Server and Client Design and Code implementation<br>
+3 Hours Server and Client End-to-End Testing<br>
+4 Hours Documentation<br>
 
 ## Installation
-
+### Testing
+Extensive E2E Testing Using Postman
+* 
 
 ## Architecture
 ### Backend Server Framework of Choice

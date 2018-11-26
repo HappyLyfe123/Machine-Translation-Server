@@ -22,6 +22,7 @@ REQUIREMENTS:
 * The server must have an external IP Address and a domain name pointing to the IP address
 git clone https://github.com/PenguinDan/MeetKai-Server.git <br>
 run ./setup.sh
+run sudo npm start
 
 ### Testing
 Extensive E2E Testing Using Postman

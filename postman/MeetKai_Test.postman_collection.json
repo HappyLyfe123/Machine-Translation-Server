@@ -1,0 +1,508 @@
+{
+	"info": {
+		"_postman_id": "152996b8-d38c-48cf-ba1f-97295ee3f7fd",
+		"name": "MeetKai_Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://www.penguindan-test.gq",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "PenguinDan",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "HelloWorld",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "applicationSecret",
+							"value": "1c022116-4ee9-40ae-ac36-8c3994c8aa9d",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/user",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "password",
+						"value": "HelloWorld"
+					},
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "username",
+						"value": "PenguinDan"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/user",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Phrase",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "language",
+						"value": "ko"
+					},
+					{
+						"key": "username",
+						"value": "PenguinDan"
+					},
+					{
+						"key": "accessToken",
+						"value": "9f2c8b48-59f2-49d7-9935-b777bd203dfa"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/phrase",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"phrase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Phrase",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "phrase",
+							"value": "Ugly ugly world",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "PenguinDan",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "accessToken",
+							"value": "149b6bfb-0865-4a49-84b7-810ea7c08a7d",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/phrase",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"phrase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Renew Token",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "PenguinDan",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "refreshToken",
+							"value": "c5a10d9c-1324-4b76-b2d0-a37788d43779",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/user/token",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"user",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Annotate Phrase",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "PenguinDan",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "accessToken",
+							"value": "9f2c8b48-59f2-49d7-9935-b777bd203dfa",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "hash",
+							"value": "d5a50a726886d34ada3011bdc1518cc34bf5808ee3a01a5966bf5db4ee4537e3",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "languageAbr",
+							"value": "ko",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "isAzureCorrect",
+							"value": "false",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "isGoogleCorrect",
+							"value": "true",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "isYandexCorrect",
+							"value": "false",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "Original Phrase",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/phrase",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"phrase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve User Annotations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accessToken",
+						"value": "fb40ddc4-445d-41ef-8488-b5d018de5fa4"
+					},
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "username",
+						"value": "PenguinDan"
+					},
+					{
+						"key": "targetUser",
+						"value": "PenguinDan",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/user/annotations",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"user",
+						"annotations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve all source annotations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "username",
+						"value": "PenguinDan"
+					},
+					{
+						"key": "accessToken",
+						"value": "8ea31901-a01e-43fc-acd1-b52fda281e55"
+					},
+					{
+						"key": "hash",
+						"value": "77a225276afd53e21eebfffac92febe6cf36159d8b4aad3d7db1e621b6e420fe"
+					},
+					{
+						"key": "phrase",
+						"value": "the glorification of god",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/phrase/annotations",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"phrase",
+						"annotations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Source Hashes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "accessToken",
+						"value": "85bf3ff3-1d9e-4819-9431-68ebb4e0420f"
+					},
+					{
+						"key": "username",
+						"value": "penguindan"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/phrase/hashes",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"phrase",
+						"hashes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Monitoring Access",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "clientId",
+						"value": "6e743a22-4943-48c1-bb51-4258761ef67a"
+					},
+					{
+						"key": "username",
+						"value": "penguindan"
+					},
+					{
+						"key": "accessToken",
+						"value": "66824b59-601d-480b-a7c6-07f3c0836a79"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://www.penguindan-test.gq/user/monitor",
+					"protocol": "https",
+					"host": [
+						"www",
+						"penguindan-test",
+						"gq"
+					],
+					"path": [
+						"user",
+						"monitor"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

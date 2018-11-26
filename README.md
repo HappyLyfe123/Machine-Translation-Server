@@ -214,7 +214,6 @@ Microsoft Azure, Google, and Yandex
 ### API to add New Source Objects
 * How?
   * Security was a big concern when creating the server. The user must send a valid access token to add any source texts to the database
-  * See the Architecture middleware methods for how the add source route works.
 
 ### API For Login and Account Registration
 * How?
@@ -244,5 +243,5 @@ Microsoft Azure, Google, and Yandex
   * When a user annotates an item, an IPC message is sent to the IPC Server. The IPC server notifies all of the listening "monitors" of the annotation through a UDP Packet.
   
  ### Deploy your application to a Cloud (BONUS)
- * The application was deployed to a Google Compute Engine, its currently running!
- * Simply send a valid request to https://www.penguindan-test.gq
+ * The application was deployed to a Google Compute Engine
+ * The installation process uses a live google cloud engine and will be able to retrieve requests sent to https://www.penguindan-test.gq

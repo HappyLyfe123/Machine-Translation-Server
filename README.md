@@ -54,7 +54,7 @@ REQUIREMENTS:
    * Type "Yes" to agree
    * Type Yes to potentially messing up the connection
 10. sudo npm start
-11. The server is setup, you can connect to it using the Postman json files and specified in the Testing Section or use the Android application
+11. The server is setup, you can connect to it using the Postman json files as specified in the Testing Section or use the Android application
 
 ### Testing
 Extensive E2E Testing Using Postman

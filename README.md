@@ -25,10 +25,10 @@ REQUIREMENTS:
 * Why?
    * Remove any potential external variables and the necessity of implementing SSL for security reasons as explained in the following sections. I found this way to be the easiest and fastest way for installing and running setup.
    * External Variables Include:
-         * Firewall blocking a port.
-         * Invalid DNS setup for SSL certificates
-         * Missing OS Files such as Python3, ufw, etc
-         * Clashing npm versions.
+        * Firewall blocking a port.
+        * Invalid DNS setup for SSL certificates
+        * Missing OS Files such as Python3, ufw, etc
+        * Clashing npm versions.
   * I was unable to implement Docker due to time restrictions, I concluded this would be the best course of action to take to eliminate any possible runtime errors.
   
 ### Steps:

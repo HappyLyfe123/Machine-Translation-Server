@@ -18,13 +18,20 @@ User and Application Authentication/Authorization restrictions.
 4 Hours Documentation<br>
 
 ## Installation
+REQUIREMENTS:
+* The server must have an external IP Address and a domain name pointing to the IP address
+git clone https://github.com/PenguinDan/MeetKai-Server.git
+run setup.sh
+
 ### Testing
 Extensive E2E Testing Using Postman
 * Contains text files for Input and Server Output Examples
 * [Postman Files](https://github.com/PenguinDan/MeetKai-Server/tree/master/postman)
-      
+* Import the file into Postman
+* There is a saved example (top right corner) and you can load them for each request
+* The server monitoring can only be tested on Android
 
-Android Client Side
+Android Client Side - Visual Client Side Testing
 * [Android Meet-Kai Client](https://github.com/PenguinDan/MeetKai-Test-Client)
 
 ## Architecture

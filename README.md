@@ -8,15 +8,16 @@ User and Application Authentication/Authorization restrictions.
 3. [Architecture](#architecture)
    * [Backend Server Framework of Choice](#Backend%201%20Server%201%20Framework%201%20Of%201%20Choice)
    * [Security First Design](#Security%201%20First%201%20Design)
-   * [Middleware](#middleware)
+   * [Schemas](#schemas)
 4. [Accomplishment Checklist](#Accomplishment%201%20Checklist)
 
 ## Time Allocation
 32 Hours Server and Client Design and Code implementation
 3 Hours Server and Client End-to-End Testing
-2 Hours Documentation
+4 Hours Documentation
 
 ## Installation
+
 
 ## Architecture
 ### Backend Server Framework of Choice
@@ -47,6 +48,86 @@ SSL Tunnel to the user's application.
 User Login and Account Creation
 * A user's login and account creation information is always kept secure through an SSL connection.
 * A user's password is kept Hashed using BCRYPT to prevent rainbow table attacks.
+
+### Schemas
+Source Schema
+* Phrase : Contains the source text's phrase
+* Hash : The source phrase hash hexadecimal hash for easier queries
+* Annotation Count : The source text index, allows for easy retrieval of source texts that have been annotated the least
+* Annotations : A Map object mapped the following manner
+```
+annotations: {
+  LANGUAGE:
+      Azure:
+          Translation:
+          correct:
+          incorrect:
+     Google:
+          Translation:
+          correct:
+          incorrect:
+     Yandex:
+          Translation:
+          correct:
+          incorrect:
+  LANGUAGE: ...
+}
+```
+* The example schema for source
+```
+const SourceSchema = new mongoose.Schema({
+    phrase: {
+        type: String,
+        required : true
+    },
+    hash : {
+        type : String,
+        unique : true
+    },
+    annotationCount : {
+        type: Number,
+        required : true,
+        index : true
+    },
+    annotations : Map
+});
+```
+User Schema
+* username : The user's username
+* password : The User's hashed password
+* accessToken : The user's access token
+* refreshToken : The user's refresh token
+* isAdmin : Whether the user is an admin
+* annotations : A map of map that stores the user's annotation attempts
+```
+const UserSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        unique : true,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    accessToken :{
+        token: String,
+        expiration: Date
+    },
+    refreshToken : {
+        token: String,
+        expiration : Date
+    },
+    isAdmin : {
+        type : Boolean,
+        required : true
+    },
+    annotations : {
+        type : Map,
+        of: Map
+    }
+});
+```
 
 ## Accomplishment Checklist
 
@@ -110,6 +191,6 @@ Microsoft Azure, Google, and Yandex
   * Once the user receives a verification that they are allowed to receive monitoring services, they are now able to retrieve UDP packets pushed from the server.
   * When a user annotates an item, an IPC message is sent to the IPC Server. The IPC server notifies all of the listening "monitors" of the annotation through a UDP Packet.
   
- ### Deploy your applicatino to a Cloud (BONUS)
+ ### Deploy your application to a Cloud (BONUS)
  * The application was deployed to a Google Compute Engine, its currently running!
  * Simply send a valid request to https://www.penguindan-test.gq

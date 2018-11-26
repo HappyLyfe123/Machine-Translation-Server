@@ -21,8 +21,20 @@ User and Application Authentication/Authorization restrictions.
 REQUIREMENTS:
 * The server must have an external IP Address and a domain name pointing to the IP address
 git clone https://github.com/PenguinDan/MeetKai-Server.git <br>
-run ./setup.sh <br>
-run sudo npm start
+Simply Login and run the setup script from the google cloud compute engine <br>
+The server is EMPTY, meaning it has been freshly initialized.
+* Why?
+   * Remove any potential external variables and the necessity of implementing SSL for security reasons as explained in the following sections. I found this way to be the easiest and fastest way for installing and running setup.
+### Steps:
+1. Login to the following google account:
+   * username : meet.k.testing.daniel@gmail.com
+   * password : danielktesting1
+2. Go to the following link:
+   * https://console.cloud.google.com/compute/instances?project=united-sunbeam-223701
+3. Click on SSH, the server should already be running.
+4. cd Application
+5. setup.sh
+6. npm start
 
 ### Testing
 Extensive E2E Testing Using Postman

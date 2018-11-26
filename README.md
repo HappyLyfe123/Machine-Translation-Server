@@ -21,7 +21,7 @@ User and Application Authentication/Authorization restrictions.
 REQUIREMENTS:
 * The server must have an external IP Address and a domain name pointing to the IP address
 git clone https://github.com/PenguinDan/MeetKai-Server.git <br>
-run ./setup.sh
+run ./setup.sh <br>
 run sudo npm start
 
 ### Testing

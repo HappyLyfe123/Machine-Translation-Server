@@ -26,6 +26,7 @@ REQUIREMENTS:
    * Remove any potential external variables and the necessity of implementing SSL for security reasons as explained in the following sections. I found this way to be the easiest and fastest way for installing and running setup.
    * External Variables Include:
         * Firewall blocking a port.
+        * Setting up Google API Keys to work with an instance of a server
         * Invalid DNS setup for SSL certificates
         * Missing OS Files such as Python3, ufw, etc
         * Clashing npm versions.

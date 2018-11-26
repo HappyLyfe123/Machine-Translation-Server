@@ -21,7 +21,7 @@ User and Application Authentication/Authorization restrictions.
 ### Testing
 Extensive E2E Testing Using Postman
 * Contains text files for Input and Server Output Examples
-* [Postman JSon File](https://github.com/PenguinDan/MeetKai-Server/tree/master/postman)
+* [Postman Files](https://github.com/PenguinDan/MeetKai-Server/tree/master/postman)
       
 
 Android Client Side

@@ -67,8 +67,9 @@ Extensive E2E Testing Using Postman
 Android Client Side - Visual Client Side Testing
 * [Android Meet-Kai Client](https://github.com/PenguinDan/MeetKai-Test-Client)
 
-!!!INFORMATION!!!
-Admin/Application Secret is "apple" to create an admin account
+!!!IMPORTANT!!! <br>
+* Admin/Application Secret is "apple" to create an admin account <br>
+* The android appliction ensures proper request format. I did my best to find and fix every possible bug and edge case. The Android Application allows less user flexibility, requiring stricter requests than postman.
 
 ## Architecture
 ### Backend Server Framework of Choice

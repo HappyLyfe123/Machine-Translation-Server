@@ -12,7 +12,7 @@ apt install software-properties-common
 add-apt-repository ppa:certbot/certbot
 apt update
 apt install -y certbot
-certbot certonly --standalone -d penguindan-test.gq -d www.penguindan-test.gq
+certbot certonly --standalone -d !!!SITENAME!!! -d !!!WWW.SITENAME.COM!!!
 
 
 # Setup Firewall
@@ -41,34 +41,23 @@ mkdir config
 # Create Google Service account files
 touch config/google_api_key.json
 cat <<EOT >> config/google_api_key.json
-{
-  "type": "service_account",
-  "project_id": "united-sunbeam-223701",
-  "private_key_id": "1bcb3642efa118bce16397576e6800b09bf544b9",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC0G9cX1XYr15CL\nv6iK6y+xjI3Rs1JUAV4S0B3EDVO6/S3tzD7Ra4vUfkPxlyLDi4gNg0AX62xr9WfK\nMuoQT0jaXsLQ+SQmq/9dW2w9hI8rkqix0xBB/LNhaZG8VxB/brJGCJwetzTziWFG\n$
-  "client_email": "652540730612-compute@developer.gserviceaccount.com",
-  "client_id": "117543293570210861450",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/652540730612-compute%40developer.gserviceaccount.com"
-}
+!!!GOOGLE SECRET!!!
 EOT
 # Create API Keys file
 touch config/api.json
 cat <<EOT >> config/api.json
 {
-"wordsKey": "HPoAkP6X1omshvlPPxb3XBWDBuhip1PEOnTjsnHDUDv1PfXlu2",
-"googleProjectId": "united-sunbeam-223701",
-"azureKey" : "c5e7b90c634f425aa26475a95925e349",
-"yandexKey" : "trnsl.1.1.20181121T224602Z.2ee92b6c3b07680a.a62f7aac435d8b52c2d0a27c180ef964bbb97fae"
+"wordsKey": !!! WORDS API KEY !!!,
+"googleProjectId": !!!GOOGLE PROJECT ID !!!,
+"azureKey" : !!! AZURE KEY !!!
+"yandexKey" : !!! YANDEX KEY !!!
 }
 EOT
 # Create Mongo Config file
 touch config/mongo.json
 cat <<EOT >> config/mongo.json
 {
-"url": "mongodb://localhost:27017/MeetKai"
+"url": !!! MONGO URL !!!
 }
 EOT
 # Create Server Configuration file
@@ -77,8 +66,8 @@ cat <<EOT >> config/server.json
 {
 "hstsTimeLimit": 31536000,
 "cipherKey": "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-CBC-SHA384:ECDHE-RSA-AES256-CBC-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:!aNULL:!MD5:!DSS", 
-"privKeyPath": "/etc/letsencrypt/live/penguindan-test.gq//privkey.pem",
-"fullchainPath": "/etc/letsencrypt/live/penguindan-test.gq//fullchain.pem",
+"privKeyPath": !!! PRIV KEY LOC !!!,
+"fullchainPath": !!! FULL CHAIN LOC !!!
 "httpPort": 80,
 "httpsPort": 443,
 "clientId": "6e743a22-4943-48c1-bb51-4258761ef67a",

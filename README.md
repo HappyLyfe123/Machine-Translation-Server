@@ -34,27 +34,20 @@ REQUIREMENTS:
   * I was unable to implement Docker due to time restrictions, I concluded this would be the best course of action to take to eliminate any possible runtime errors.
   
 ### Steps:
-1. Login to the following google account:
-   * username : meet.k.testing.daniel@gmail.com
-   * password : danielktesting1
-2. Go to the following link:
-   * https://console.cloud.google.com/compute/instances?project=united-sunbeam-223701
-   * Make sure that you are logged in as meet.k.testing.daniel@gmail.com
-3. Click on SSH, the server should already be running
-4. type sudo apt update
-5. type sudo apt upgrade, Yes when prompted
-6. type sudo apt install -y git
-7. type git clone https://github.com/PenguinDan/MeetKai-Server.git
-8. type cd MeetKai-Server
-9. type sudo ./setup.sh
+1. type sudo apt update
+2. type sudo apt upgrade, Yes when prompted
+3. type sudo apt install -y git
+4. type git clone https://github.com/PenguinDan/MeetKai-Server.git
+5. type cd MeetKai-Server
+6. type sudo ./setup.sh
    * If prompted about Location, Type 2 for America
    * If prompted about timezone, type 85 for Los Angeles
    * Use email meet.k.testing.daniel@gmail.com
    * Type "A" to agree to terms
    * Type "Yes" to agree
    * Type Yes to potentially messing up the connection
-10. sudo npm start
-11. The server is setup, you can connect to it using the Postman json files as specified in the Testing Section or use the Android application
+7. sudo npm start
+8. The server is setup, you can connect to it using the Postman json files as specified in the Testing Section or use the Android application
 
 ### Testing
 Extensive E2E Testing Using Postman
